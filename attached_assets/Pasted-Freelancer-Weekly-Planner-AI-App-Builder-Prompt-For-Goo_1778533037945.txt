@@ -1,0 +1,506 @@
+Freelancer Weekly Planner — AI App Builder Prompt
+
+(For Google AI Studio / Replit / Cursor / Lovable / Bolt / Claude Code)
+
+Build a fully functional premium web application called:
+
+“Freelancer Weekly Planner”
+
+A productivity + planning + income tracking system made specifically for freelancers, solo designers, developers, video editors, marketers, copywriters, and creators.
+
+The product should feel like a premium SaaS product — clean, modern, practical, and highly useful in real life.
+
+The goal is to later sell this product on Gumroad as:
+
+Web App
+Google Sheets Version
+Excel Version
+Notion-like productivity system
+CORE PRODUCT GOAL
+
+Help freelancers:
+
+Plan weekly work
+Track clients
+Manage income goals
+Organize tasks
+Prevent overload
+Estimate monthly revenue
+Track invoices/payments
+Analyze productivity
+Improve consistency
+
+The app should provide:
+
+Smart suggestions
+Weekly insights
+Revenue forecasting
+Workload balance analysis
+Productivity scoring
+Planning automation
+
+The app should NOT feel like a boring spreadsheet.
+
+It must feel:
+
+premium
+minimal
+modern SaaS
+practical
+smooth
+intelligent
+highly visual
+TECH STACK
+
+Use:
+
+React + Next.js
+Tailwind CSS
+Framer Motion
+Local Storage OR Supabase/Firebase
+Chart.js or Recharts
+Dark/Light mode
+Responsive Design
+PWA support preferred
+
+Also generate:
+
+Export to Excel
+Export to CSV
+Google Sheets compatible export
+Printable weekly report PDF
+DESIGN DIRECTION
+
+UI Style:
+
+Linear.app
+Notion
+Framer
+Arc Browser
+Stripe Dashboard
+Modern SaaS aesthetics
+
+Visual Style:
+
+Soft shadows
+Large spacing
+Rounded corners
+Elegant typography
+Glassmorphism in limited areas
+Smooth hover animations
+Clean cards
+Subtle gradients
+Beautiful charts
+
+DO NOT:
+
+use generic templates
+overcrowd dashboard
+use cartoonish UI
+use excessive colors
+
+Use:
+
+Black / White / Zinc / Neutral palette
+Premium accent color
+Clean icon system
+Proper hierarchy
+MAIN APP FLOW
+1. ONBOARDING FLOW
+
+When user first opens app:
+
+Ask:
+
+Name
+Profession
+Monthly income goal
+Weekly working hours
+Preferred work days
+Currency
+Main freelance niche
+
+Examples:
+
+UI/UX Designer
+Video Editor
+Web Developer
+Social Media Manager
+Copywriter
+
+Then generate:
+
+Personalized dashboard
+Suggested weekly structure
+Recommended income targets
+2. DASHBOARD
+
+The dashboard should feel extremely premium.
+
+Include:
+
+Top Overview Cards
+Weekly Revenue
+Monthly Goal Progress
+Pending Payments
+Active Clients
+Hours Worked
+Productivity Score
+
+Example:
+Weekly Revenue: $640
+Goal Progress: 64%
+Pending Invoices: $1200
+Clients Active: 5
+
+3. WEEKLY PLANNER
+
+Core feature.
+
+User can:
+
+Add tasks
+Drag and drop schedule
+Assign tasks to days
+Add estimated hours
+Mark priority
+Add client relation
+
+Views:
+
+Weekly Calendar
+Daily Focus View
+Kanban View
+
+Task fields:
+
+Task title
+Client
+Deadline
+Estimated time
+Actual time
+Priority
+Status
+
+Statuses:
+
+To Do
+In Progress
+Waiting
+Delivered
+Revision
+Completed
+
+Example:
+Design landing page
+Client: PureFlow
+Estimated: 5h
+Deadline: Thursday
+
+4. CLIENT TRACKER
+
+Premium CRM-like section for freelancers.
+
+Each client profile includes:
+
+Client name
+Company
+Email
+Country
+Project type
+Rate
+Payment status
+Last contact date
+Notes
+
+Client statuses:
+
+Lead
+Active
+Waiting
+Completed
+Ghosted
+
+Show:
+
+Total earnings from client
+Outstanding invoices
+Average response time
+Project history
+
+Example:
+Client: PureFlow
+Total Earned: $4,500
+Pending: $800
+Projects Completed: 7
+
+5. INCOME GOAL TRACKER
+
+Freelancers can set:
+
+Weekly goal
+Monthly goal
+Quarterly goal
+
+Show:
+
+Progress bars
+Forecast charts
+Revenue trends
+Goal completion %
+
+AI suggestions:
+
+“You need $320 more this week to hit your goal.”
+“At your current pace, you may exceed your monthly target by 12%.”
+6. BUDGET & EXPENSE TRACKER
+
+Allow freelancers to track:
+
+Software subscriptions
+Ads
+Internet
+Team payments
+Equipment
+Misc expenses
+
+Auto-calculate:
+
+Net income
+Monthly profit
+Burn rate
+Savings %
+
+Example:
+Income: $3500
+Expenses: $1200
+Net Profit: $2300
+
+7. SMART AI INSIGHTS SYSTEM
+
+This is one of the biggest selling points.
+
+The app should generate intelligent insights based on user data.
+
+Examples:
+
+If overloaded:
+“Your Thursday workload exceeds healthy limits. Consider moving 2 tasks.”
+
+If income low:
+“You are 35% behind your monthly target. Consider increasing outreach or upsells.”
+
+If client dependency high:
+“72% of your income comes from one client. Diversification recommended.”
+
+If productivity drops:
+“You complete more tasks between 10AM–2PM. Schedule deep work during those hours.”
+
+8. GOALS SECTION
+
+Users can create:
+
+Financial goals
+Skill goals
+Client acquisition goals
+Productivity goals
+
+Examples:
+
+Reach $5k/month
+Get 3 retainer clients
+Learn Framer
+Reduce revisions by 40%
+
+Track:
+
+progress
+deadlines
+milestones
+9. ANALYTICS DASHBOARD
+
+Charts:
+
+Revenue Growth
+Hours Worked
+Client Distribution
+Productivity Trends
+Most Profitable Clients
+Weekly Completion Rate
+
+Add:
+
+beautiful animations
+smooth transitions
+interactive hover states
+10. EXPORT SYSTEM
+
+Allow export as:
+
+Excel
+CSV
+PDF Weekly Report
+Google Sheets compatible format
+
+Weekly report should include:
+
+Tasks completed
+Revenue earned
+Pending invoices
+Productivity score
+Goals progress
+11. NOTIFICATIONS & REMINDERS
+
+Include:
+
+Deadline reminders
+Payment reminders
+Weekly planning reminder
+Client follow-up reminder
+
+Examples:
+“You haven’t followed up with Sarah in 9 days.”
+“Invoice #23 is overdue.”
+
+12. SETTINGS
+
+Include:
+
+Dark mode
+Currency
+Timezone
+Week start day
+Notifications
+Export preferences
+PREMIUM UX DETAILS
+
+Must include:
+
+Smooth loading skeletons
+Empty states
+Beautiful charts
+Micro interactions
+Animated counters
+Floating action button
+Keyboard shortcuts
+Command palette
+Quick add task modal
+SAMPLE USER FLOW
+
+Example Freelancer:
+Name: Moiz
+Profession: UI/UX Designer
+Monthly Goal: $4000
+
+Clients:
+
+PureFlow
+Nexa AI
+Finovate
+
+Weekly Plan:
+Monday:
+
+Dashboard UI (5h)
+Client Call (1h)
+
+Tuesday:
+
+Landing Page Design (4h)
+Revisions (2h)
+
+AI Insight:
+“You are spending 42% of your time on revisions. Consider improving approval workflow.”
+
+GOOGLE SHEETS / EXCEL VERSION
+
+Also generate:
+
+Spreadsheet version
+
+Include tabs:
+
+Dashboard
+Weekly Planner
+Clients
+Income Tracker
+Expenses
+Goals
+Analytics
+
+Use:
+
+formulas
+automation
+conditional formatting
+dropdowns
+progress bars
+charts
+
+Should feel premium and easy to use.
+
+GUMROAD PRODUCT STRUCTURE
+
+Generate complete product assets:
+
+Main App
+README
+Setup Guide
+Demo Data
+Dark Theme
+Light Theme
+Excel Version
+Google Sheets Version
+PDF Guide
+
+Include:
+
+Example freelancer data
+Pre-filled demo workspace
+Mock clients
+Mock revenue
+LANDING PAGE
+
+Also create:
+A premium SaaS landing page.
+
+Sections:
+
+Hero
+Features
+Dashboard Preview
+Testimonials
+Pricing
+FAQ
+CTA
+
+Headline example:
+“Run Your Freelance Business Like a Professional Studio.”
+
+Subheadline:
+“Plan projects, track clients, manage income, and hit your goals — all in one premium workspace.”
+
+IMPORTANT REQUIREMENTS
+
+The app MUST:
+
+be fully functional
+use real calculations
+save user data
+feel production ready
+be responsive
+have polished UI
+include realistic demo data
+include modern animations
+include clean UX
+
+Avoid:
+
+fake dashboards
+placeholder-only UI
+unfinished sections
+generic admin panel feel
+
+This should feel like a real premium startup product people would pay for on Gumroad.
+
+Build complete end-to-end functionality.

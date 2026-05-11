@@ -1,22 +1,35 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Freelancer Weekly Planner API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: profile
+    description: User profile / onboarding
+  - name: clients
+    description: Client tracker
+  - name: tasks
+    description: Weekly planner tasks
+  - name: income
+    description: Income goals and tracking
+  - name: expenses
+    description: Budget and expenses
+  - name: goals
+    description: Personal/professional goals
+  - name: dashboard
+    description: Dashboard summaries and analytics
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +37,607 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # Profile / Onboarding
+  /profile:
+    get:
+      operationId: getProfile
+      tags: [profile]
+      summary: Get user profile
+      responses:
+        "200":
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+        "404":
+          description: No profile yet
+    post:
+      operationId: createProfile
+      tags: [profile]
+      summary: Create or replace user profile (onboarding)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+    patch:
+      operationId: updateProfile
+      tags: [profile]
+      summary: Update user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+
+  # Clients
+  /clients:
+    get:
+      operationId: listClients
+      tags: [clients]
+      summary: List all clients
+      responses:
+        "200":
+          description: Client list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Client"
+    post:
+      operationId: createClient
+      tags: [clients]
+      summary: Create a client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClientInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+
+  /clients/{id}:
+    get:
+      operationId: getClient
+      tags: [clients]
+      summary: Get a client by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Client
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateClient
+      tags: [clients]
+      summary: Update a client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClientUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+    delete:
+      operationId: deleteClient
+      tags: [clients]
+      summary: Delete a client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # Tasks
+  /tasks:
+    get:
+      operationId: listTasks
+      tags: [tasks]
+      summary: List tasks (optionally filter by week)
+      parameters:
+        - name: weekStart
+          in: query
+          required: false
+          schema:
+            type: string
+            description: ISO date for the start of the week (YYYY-MM-DD)
+        - name: clientId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Task list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+    post:
+      operationId: createTask
+      tags: [tasks]
+      summary: Create a task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+
+  /tasks/{id}:
+    patch:
+      operationId: updateTask
+      tags: [tasks]
+      summary: Update a task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+    delete:
+      operationId: deleteTask
+      tags: [tasks]
+      summary: Delete a task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # Income entries
+  /income:
+    get:
+      operationId: listIncome
+      tags: [income]
+      summary: List income entries
+      parameters:
+        - name: month
+          in: query
+          required: false
+          schema:
+            type: string
+            description: YYYY-MM
+      responses:
+        "200":
+          description: Income list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IncomeEntry"
+    post:
+      operationId: createIncome
+      tags: [income]
+      summary: Record an income entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IncomeInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IncomeEntry"
+
+  /income/{id}:
+    patch:
+      operationId: updateIncome
+      tags: [income]
+      summary: Update an income entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IncomeUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IncomeEntry"
+    delete:
+      operationId: deleteIncome
+      tags: [income]
+      summary: Delete an income entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # Income Goals
+  /income-goals:
+    get:
+      operationId: listIncomeGoals
+      tags: [income]
+      summary: List income goals
+      responses:
+        "200":
+          description: Income goals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IncomeGoal"
+    post:
+      operationId: createIncomeGoal
+      tags: [income]
+      summary: Create or update an income goal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IncomeGoalInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IncomeGoal"
+
+  /income-goals/{id}:
+    patch:
+      operationId: updateIncomeGoal
+      tags: [income]
+      summary: Update an income goal
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IncomeGoalUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IncomeGoal"
+    delete:
+      operationId: deleteIncomeGoal
+      tags: [income]
+      summary: Delete an income goal
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # Expenses
+  /expenses:
+    get:
+      operationId: listExpenses
+      tags: [expenses]
+      summary: List expenses
+      parameters:
+        - name: month
+          in: query
+          required: false
+          schema:
+            type: string
+            description: YYYY-MM
+      responses:
+        "200":
+          description: Expense list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Expense"
+    post:
+      operationId: createExpense
+      tags: [expenses]
+      summary: Create an expense
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpenseInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+
+  /expenses/{id}:
+    patch:
+      operationId: updateExpense
+      tags: [expenses]
+      summary: Update an expense
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpenseUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+    delete:
+      operationId: deleteExpense
+      tags: [expenses]
+      summary: Delete an expense
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # Goals
+  /goals:
+    get:
+      operationId: listGoals
+      tags: [goals]
+      summary: List all goals
+      responses:
+        "200":
+          description: Goal list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Goal"
+    post:
+      operationId: createGoal
+      tags: [goals]
+      summary: Create a goal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoalInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Goal"
+
+  /goals/{id}:
+    patch:
+      operationId: updateGoal
+      tags: [goals]
+      summary: Update a goal
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoalUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Goal"
+    delete:
+      operationId: deleteGoal
+      tags: [goals]
+      summary: Delete a goal
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # Dashboard / Analytics
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get high-level dashboard stats
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/weekly-revenue:
+    get:
+      operationId: getWeeklyRevenue
+      tags: [dashboard]
+      summary: Get weekly revenue data for chart (last 8 weeks)
+      responses:
+        "200":
+          description: Weekly revenue chart data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WeeklyRevenuePoint"
+
+  /dashboard/client-distribution:
+    get:
+      operationId: getClientDistribution
+      tags: [dashboard]
+      summary: Get revenue distribution by client
+      responses:
+        "200":
+          description: Client revenue distribution
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClientDistributionPoint"
+
+  /dashboard/insights:
+    get:
+      operationId: getInsights
+      tags: [dashboard]
+      summary: Get AI-like smart insights based on user data
+      responses:
+        "200":
+          description: List of insights
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Insight"
+
+  /dashboard/task-completion:
+    get:
+      operationId: getTaskCompletion
+      tags: [dashboard]
+      summary: Get weekly task completion rate (last 8 weeks)
+      responses:
+        "200":
+          description: Task completion rates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TaskCompletionPoint"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +648,555 @@ components:
       required:
         - status
 
+    Profile:
+      type: object
+      required: [id, name, profession, monthlGoal, weeklyHours, currency, niche, workDays]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        profession:
+          type: string
+        monthlyGoal:
+          type: number
+        weeklyHours:
+          type: number
+        currency:
+          type: string
+        niche:
+          type: string
+        workDays:
+          type: array
+          items:
+            type: string
+        timezone:
+          type: ["string", "null"]
+        weekStartDay:
+          type: string
+        darkMode:
+          type: boolean
+
+    ProfileInput:
+      type: object
+      required: [name, profession, monthlyGoal, weeklyHours, currency, niche, workDays]
+      properties:
+        name:
+          type: string
+        profession:
+          type: string
+        monthlyGoal:
+          type: number
+        weeklyHours:
+          type: number
+        currency:
+          type: string
+        niche:
+          type: string
+        workDays:
+          type: array
+          items:
+            type: string
+        timezone:
+          type: string
+        weekStartDay:
+          type: string
+        darkMode:
+          type: boolean
+
+    ProfileUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        profession:
+          type: string
+        monthlyGoal:
+          type: number
+        weeklyHours:
+          type: number
+        currency:
+          type: string
+        niche:
+          type: string
+        workDays:
+          type: array
+          items:
+            type: string
+        timezone:
+          type: string
+        weekStartDay:
+          type: string
+        darkMode:
+          type: boolean
+
+    Client:
+      type: object
+      required: [id, name, status, rate, currency]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        company:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        country:
+          type: ["string", "null"]
+        projectType:
+          type: ["string", "null"]
+        rate:
+          type: number
+        currency:
+          type: string
+        paymentStatus:
+          type: string
+        status:
+          type: string
+          description: "lead | active | waiting | completed | ghosted"
+        lastContactDate:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        totalEarned:
+          type: number
+        outstandingAmount:
+          type: number
+        projectsCompleted:
+          type: integer
+        createdAt:
+          type: string
+
+    ClientInput:
+      type: object
+      required: [name, status, rate, currency]
+      properties:
+        name:
+          type: string
+        company:
+          type: string
+        email:
+          type: string
+        country:
+          type: string
+        projectType:
+          type: string
+        rate:
+          type: number
+        currency:
+          type: string
+        paymentStatus:
+          type: string
+        status:
+          type: string
+        lastContactDate:
+          type: string
+        notes:
+          type: string
+
+    ClientUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        company:
+          type: string
+        email:
+          type: string
+        country:
+          type: string
+        projectType:
+          type: string
+        rate:
+          type: number
+        currency:
+          type: string
+        paymentStatus:
+          type: string
+        status:
+          type: string
+        lastContactDate:
+          type: string
+        notes:
+          type: string
+
+    Task:
+      type: object
+      required: [id, title, status, priority, scheduledDate]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        clientId:
+          type: ["integer", "null"]
+        clientName:
+          type: ["string", "null"]
+        deadline:
+          type: ["string", "null"]
+        scheduledDate:
+          type: string
+          description: ISO date YYYY-MM-DD
+        estimatedHours:
+          type: ["number", "null"]
+        actualHours:
+          type: ["number", "null"]
+        priority:
+          type: string
+          description: "low | medium | high | urgent"
+        status:
+          type: string
+          description: "todo | in_progress | waiting | delivered | revision | completed"
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    TaskInput:
+      type: object
+      required: [title, status, priority, scheduledDate]
+      properties:
+        title:
+          type: string
+        clientId:
+          type: integer
+        deadline:
+          type: string
+        scheduledDate:
+          type: string
+        estimatedHours:
+          type: number
+        actualHours:
+          type: number
+        priority:
+          type: string
+        status:
+          type: string
+        notes:
+          type: string
+
+    TaskUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        clientId:
+          type: integer
+        deadline:
+          type: string
+        scheduledDate:
+          type: string
+        estimatedHours:
+          type: number
+        actualHours:
+          type: number
+        priority:
+          type: string
+        status:
+          type: string
+        notes:
+          type: string
+
+    IncomeEntry:
+      type: object
+      required: [id, amount, currency, date, description]
+      properties:
+        id:
+          type: integer
+        amount:
+          type: number
+        currency:
+          type: string
+        date:
+          type: string
+        description:
+          type: string
+        clientId:
+          type: ["integer", "null"]
+        clientName:
+          type: ["string", "null"]
+        invoiceNumber:
+          type: ["string", "null"]
+        paymentStatus:
+          type: string
+          description: "paid | pending | overdue"
+        createdAt:
+          type: string
+
+    IncomeInput:
+      type: object
+      required: [amount, currency, date, description]
+      properties:
+        amount:
+          type: number
+        currency:
+          type: string
+        date:
+          type: string
+        description:
+          type: string
+        clientId:
+          type: integer
+        invoiceNumber:
+          type: string
+        paymentStatus:
+          type: string
+
+    IncomeUpdate:
+      type: object
+      properties:
+        amount:
+          type: number
+        currency:
+          type: string
+        date:
+          type: string
+        description:
+          type: string
+        clientId:
+          type: integer
+        invoiceNumber:
+          type: string
+        paymentStatus:
+          type: string
+
+    IncomeGoal:
+      type: object
+      required: [id, period, targetAmount, currency]
+      properties:
+        id:
+          type: integer
+        period:
+          type: string
+          description: "weekly | monthly | quarterly"
+        targetAmount:
+          type: number
+        currency:
+          type: string
+        currentAmount:
+          type: number
+        periodLabel:
+          type: string
+        createdAt:
+          type: string
+
+    IncomeGoalInput:
+      type: object
+      required: [period, targetAmount, currency]
+      properties:
+        period:
+          type: string
+        targetAmount:
+          type: number
+        currency:
+          type: string
+        periodLabel:
+          type: string
+
+    IncomeGoalUpdate:
+      type: object
+      properties:
+        period:
+          type: string
+        targetAmount:
+          type: number
+        currency:
+          type: string
+        periodLabel:
+          type: string
+
+    Expense:
+      type: object
+      required: [id, amount, currency, date, description, category]
+      properties:
+        id:
+          type: integer
+        amount:
+          type: number
+        currency:
+          type: string
+        date:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+          description: "software | ads | internet | team | equipment | misc"
+        recurring:
+          type: boolean
+        createdAt:
+          type: string
+
+    ExpenseInput:
+      type: object
+      required: [amount, currency, date, description, category]
+      properties:
+        amount:
+          type: number
+        currency:
+          type: string
+        date:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        recurring:
+          type: boolean
+
+    ExpenseUpdate:
+      type: object
+      properties:
+        amount:
+          type: number
+        currency:
+          type: string
+        date:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        recurring:
+          type: boolean
+
+    Goal:
+      type: object
+      required: [id, title, category, status]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        category:
+          type: string
+          description: "financial | skill | client | productivity"
+        status:
+          type: string
+          description: "not_started | in_progress | completed"
+        progress:
+          type: integer
+          description: "0-100 percent"
+        deadline:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    GoalInput:
+      type: object
+      required: [title, category, status]
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        status:
+          type: string
+        progress:
+          type: integer
+        deadline:
+          type: string
+
+    GoalUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        status:
+          type: string
+        progress:
+          type: integer
+        deadline:
+          type: string
+
+    DashboardSummary:
+      type: object
+      required: [weeklyRevenue, monthlyGoalProgress, pendingInvoices, activeClients, hoursWorkedThisWeek, productivityScore, totalTasksThisWeek, completedTasksThisWeek, netProfitThisMonth, totalExpensesThisMonth]
+      properties:
+        weeklyRevenue:
+          type: number
+        monthlyGoalProgress:
+          type: number
+          description: "0-100 percentage"
+        monthlyGoalTarget:
+          type: number
+        monthlyGoalCurrent:
+          type: number
+        pendingInvoices:
+          type: number
+        activeClients:
+          type: integer
+        hoursWorkedThisWeek:
+          type: number
+        productivityScore:
+          type: integer
+          description: "0-100"
+        totalTasksThisWeek:
+          type: integer
+        completedTasksThisWeek:
+          type: integer
+        netProfitThisMonth:
+          type: number
+        totalExpensesThisMonth:
+          type: number
+        currency:
+          type: string
+
+    WeeklyRevenuePoint:
+      type: object
+      required: [week, revenue]
+      properties:
+        week:
+          type: string
+          description: Label like "Jan 6"
+        revenue:
+          type: number
+
+    ClientDistributionPoint:
+      type: object
+      required: [clientName, revenue, percentage]
+      properties:
+        clientName:
+          type: string
+        revenue:
+          type: number
+        percentage:
+          type: number
+
+    Insight:
+      type: object
+      required: [id, type, message, severity]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          description: "workload | income | client | productivity"
+        message:
+          type: string
+        severity:
+          type: string
+          description: "info | warning | critical"
+
+    TaskCompletionPoint:
+      type: object
+      required: [week, completed, total, rate]
+      properties:
+        week:
+          type: string
+        completed:
+          type: integer
+        total:
+          type: integer
+        rate:
+          type: number
+          description: "0-100 percent"
