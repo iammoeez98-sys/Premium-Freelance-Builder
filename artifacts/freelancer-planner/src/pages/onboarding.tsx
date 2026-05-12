@@ -74,6 +74,7 @@ export default function Onboarding() {
       }
     });
     queryClient.invalidateQueries({ queryKey: getGetProfileQueryKey() });
+    localStorage.setItem("freelanceos_session", "true");
     setLocation("/");
   };
 

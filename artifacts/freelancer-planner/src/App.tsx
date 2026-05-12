@@ -37,10 +37,16 @@ function ProtectedRoute({ component: Component, ...rest }: any) {
 
   useEffect(() => {
     if (!isLoading && error) {
-      // 404 means no profile
+      // No profile in DB → go to onboarding
+      localStorage.removeItem("freelanceos_session");
       setLocation("/onboarding");
+      return;
     }
-  }, [isLoading, error, setLocation]);
+    if (!isLoading && profile) {
+      // Profile exists → ensure session flag is set (handles existing users)
+      localStorage.setItem("freelanceos_session", "true");
+    }
+  }, [isLoading, error, profile, setLocation]);
 
   if (isLoading) {
     return (
@@ -51,7 +57,7 @@ function ProtectedRoute({ component: Component, ...rest }: any) {
   }
 
   if (error || !profile) {
-    return null; // Will redirect in useEffect
+    return null;
   }
 
   return (

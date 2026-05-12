@@ -2,9 +2,10 @@ import { Link, useLocation } from "wouter";
 import { useState } from "react";
 import {
   LayoutDashboard, Calendar, Users, DollarSign, Receipt,
-  Target, BarChart3, Settings, Menu, X, TrendingUp, ChevronRight
+  Target, BarChart3, Settings, Menu, X, TrendingUp, ChevronRight, LogOut
 } from "lucide-react";
 import { useGetProfile } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -24,10 +25,17 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { data: profile } = useGetProfile();
   const { theme, setTheme } = useTheme();
+  const queryClient = useQueryClient();
+
+  const handleLogout = () => {
+    localStorage.removeItem("freelanceos_session");
+    queryClient.clear();
+    setLocation("/onboarding");
+  };
 
   const initials = profile?.name
     ? profile.name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase()
@@ -95,6 +103,13 @@ export function AppLayout({ children }: AppLayoutProps) {
             <p className="text-xs font-semibold text-sidebar-foreground truncate">{profile?.name ?? "Freelancer"}</p>
             <p className="text-xs text-muted-foreground truncate">{profile?.profession ?? "Professional"}</p>
           </div>
+          <button
+            onClick={handleLogout}
+            title="Log out"
+            className="w-7 h-7 flex items-center justify-center rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors flex-shrink-0"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+          </button>
         </div>
       </div>
     </div>
