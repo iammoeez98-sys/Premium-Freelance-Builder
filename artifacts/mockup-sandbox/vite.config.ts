@@ -5,81 +5,46 @@ import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { mockupPreviewPlugin } from "./mockupPreviewPlugin";
 
-const rawPort = process.env.PORT;
-const basePath = process.env.BASE_PATH;
-
-// Basic validation
-if (!rawPort) {
-  throw new Error("PORT environment variable is required but was not provided.");
-}
-
-if (!basePath) {
-  throw new Error(
-    "BASE_PATH environment variable is required but was not provided."
-  );
-}
+const rawPort = process.env.PORT || 3000;
+const basePath = process.env.BASE_PATH || "/";
 
 const port = Number(rawPort);
 
-if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${rawPort}"`);
-}
+export default defineConfig({
+  base: basePath,
 
-export default defineConfig(async () => {
-  const plugins = [
+  plugins: [
     mockupPreviewPlugin(),
     react(),
     tailwindcss(),
     runtimeErrorOverlay(),
-  ];
+  ],
 
-  // Only load Replit cartographer in dev + Replit env
-  if (
-    process.env.NODE_ENV !== "production" &&
-    process.env.REPL_ID !== undefined
-  ) {
-    const { cartographer } = await import(
-      "@replit/vite-plugin-cartographer"
-    );
-
-    plugins.push(
-      cartographer({
-        root: path.resolve(import.meta.dirname, ".."),
-      })
-    );
-  }
-
-  return {
-    base: basePath,
-
-    plugins,
-
-    resolve: {
-      alias: {
-        "@": path.resolve(import.meta.dirname, "src"),
-      },
+  resolve: {
+    alias: {
+      "@": path.resolve(import.meta.dirname, "src"),
     },
+  },
 
-    root: path.resolve(import.meta.dirname),
+  root: path.resolve(import.meta.dirname),
 
-    build: {
-      outDir: path.resolve(import.meta.dirname, "dist"),
-      emptyOutDir: true,
+  build: {
+    outDir: path.resolve(import.meta.dirname, "dist"),
+    emptyOutDir: true,
+  },
+
+  server: {
+    port,
+    host: "0.0.0.0",
+    allowedHosts: true,
+    fs: {
+      strict: true,
     },
+  },
 
-    server: {
-      port,
-      host: "0.0.0.0",
-      allowedHosts: true,
-      fs: {
-        strict: true,
-      },
-    },
-
-    preview: {
-      port,
-      host: "0.0.0.0",
-      allowedHosts: true,
-    },
-  };
+  preview: {
+    port,
+    host: "0.0.0.0",
+    allowedHosts: true,
+  },
 });
