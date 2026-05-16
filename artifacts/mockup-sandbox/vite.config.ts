@@ -5,10 +5,8 @@ import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { mockupPreviewPlugin } from "./mockupPreviewPlugin";
 
-const rawPort = process.env.PORT || 3000;
+const port = Number(process.env.PORT || 3000);
 const basePath = process.env.BASE_PATH || "/";
-
-const port = Number(rawPort);
 
 export default defineConfig({
   base: basePath,
@@ -23,7 +21,14 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "src"),
+      "@assets": path.resolve(
+        import.meta.dirname,
+        "..",
+        "..",
+        "attached_assets"
+      ),
     },
+    dedupe: ["react", "react-dom"],
   },
 
   root: path.resolve(import.meta.dirname),
@@ -35,6 +40,7 @@ export default defineConfig({
 
   server: {
     port,
+    strictPort: true,
     host: "0.0.0.0",
     allowedHosts: true,
     fs: {
