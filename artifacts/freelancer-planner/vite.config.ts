@@ -7,29 +7,31 @@ import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 const port = Number(process.env.PORT || 3000);
 const basePath = process.env.BASE_PATH || "/";
 
+const isDev =
+  process.env.NODE_ENV !== "production" &&
+  process.env.REPL_ID !== undefined;
+
+// safe plugin loader (NO await in config)
+const devPlugins = [];
+
+if (isDev) {
+  import("@replit/vite-plugin-cartographer").then((m) => {
+    devPlugins.push(
+      m.cartographer({
+        root: path.resolve(import.meta.dirname, ".."),
+      })
+    );
+  });
+
+  import("@replit/vite-plugin-dev-banner").then((m) => {
+    devPlugins.push(m.devBanner());
+  });
+}
+
 export default defineConfig({
   base: basePath,
 
-  plugins: [
-    react(),
-    tailwindcss(),
-    runtimeErrorOverlay(),
-
-    ...(process.env.NODE_ENV !== "production" &&
-    process.env.REPL_ID !== undefined
-      ? [
-          await import("@replit/vite-plugin-cartographer").then((m) =>
-            m.cartographer({
-              root: path.resolve(import.meta.dirname, ".."),
-            }),
-          ),
-
-          await import("@replit/vite-plugin-dev-banner").then((m) =>
-            m.devBanner(),
-          ),
-        ]
-      : []),
-  ],
+  plugins: [react(), tailwindcss(), runtimeErrorOverlay(), ...devPlugins],
 
   resolve: {
     alias: {
@@ -38,10 +40,9 @@ export default defineConfig({
         import.meta.dirname,
         "..",
         "..",
-        "attached_assets",
+        "attached_assets"
       ),
     },
-
     dedupe: ["react", "react-dom"],
   },
 
@@ -57,10 +58,7 @@ export default defineConfig({
     strictPort: true,
     host: "0.0.0.0",
     allowedHosts: true,
-
-    fs: {
-      strict: true,
-    },
+    fs: { strict: true },
   },
 
   preview: {
